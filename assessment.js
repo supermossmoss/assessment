@@ -10,16 +10,31 @@ assessmentButton.onclick = () => {
     // 名前が空の時は処理を終了する
     return;
   }
+
   // 診断結果表示エリアの作成
   resultDivision.innerText = '';
-  const header = document.createElement('h3');
-  header.innerText = '診断結果';
-  resultDivision.appendChild(header);
 
-  const paragraph = document.createElement('p');
+  // headerDivision の作成
+  const headerDivision = document.createElement('div');
+  headerDivision.setAttribute('class', 'card-header text-bg-primary');
+  headerDivision.innerText = '診断結果';
+
+  // bodyDivision の作成
+  const bodyDivision = document.createElement('div');
+  bodyDivision.setAttribute('class', 'card-body');
+
+  const paragraph = document.createElement('div');
+  paragraph.setAttribute('class', 'card-text');
   const result = assessment(userName);
   paragraph.innerText = result;
-  resultDivision.appendChild(paragraph);
+  bodyDivision.appendChild(paragraph);
+
+  // resultDivision に Bootstrap のスタイルを適用する
+  resultDivision.setAttribute('class', 'card');
+
+  // headerDivision と bodyDivision を resultDivision に差し込む
+  resultDivision.appendChild(headerDivision);
+  resultDivision.appendChild(bodyDivision);
 
   // ツイートエリアの作成
   tweetDivision.innerText = '';
@@ -28,15 +43,15 @@ assessmentButton.onclick = () => {
     'https://twitter.com/intent/tweet?button_hashtag=' +
     encodeURIComponent('あなたのいいところ') +
     '&ref_src=twsrc%5Etfw';
+
   anchor.setAttribute('href', hrefValue);
-  anchor.setAttribute('class', 'twitter-button_hashtag-button');
+  anchor.setAttribute('class', 'twitter-hashtag-button');
   anchor.setAttribute('data-text', result);
   anchor.innerText = 'Tweet #あなたのいいところ';
 
   tweetDivision.appendChild(anchor);
 
   const script = document.createElement('script');
-  script = document.createElement('script');
   script.setAttribute('src', 'https://platform.twitter.com/widgets.js');
   tweetDivision.appendChild(script);
 };
@@ -77,12 +92,12 @@ function assessment(userName) {
   for (let i = 0; i < userName.length; i++) {
     sumOfCharCode = sumOfCharCode + userName.charCodeAt(i);
   }
-  // 文字のコード番号の合計を回答の数で割って添字の数値を求める
 
+  // 文字のコード番号の合計を回答の数で割って添字の数値を求める
   const index = sumOfCharCode % answers.length;
   let result = answers[index];
 
-  result = result.replaceAll('###userName###, userName');
+  result = result.replaceAll('###userName###', userName);
   return result;
 }
 
